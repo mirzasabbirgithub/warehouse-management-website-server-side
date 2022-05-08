@@ -22,7 +22,6 @@ async function run() {
           try {
                     await client.connect();
                     const itemCollection = client.db('warehouse').collection('item');
-                    //const countingResult = client.db('warehouse').collection('result');
 
                     //get item from mongodb
                     app.get('/item', async (req, res) => {
@@ -47,8 +46,6 @@ async function run() {
                               const result = await itemCollection.insertOne(newItem);
                               res.send(result);
                     });
-
-
 
 
                     //Delete Item
