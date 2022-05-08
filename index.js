@@ -22,6 +22,8 @@ async function run() {
           try {
                     await client.connect();
                     const itemCollection = client.db('warehouse').collection('item');
+                    //const countingResult = client.db('warehouse').collection('result');
+
                     //get item from mongodb
                     app.get('/item', async (req, res) => {
                               const query = {};
@@ -29,6 +31,7 @@ async function run() {
                               const items = await cursor.toArray();
                               res.send(items);
                     });
+
 
                     //Individual Item
                     app.get('/item/:id', async (req, res) => {
@@ -45,6 +48,9 @@ async function run() {
                               res.send(result);
                     });
 
+
+
+
                     //Delete Item
                     app.delete('/item/:id', async (req, res) => {
                               const id = req.params.id;
@@ -52,6 +58,23 @@ async function run() {
                               const result = await itemCollection.deleteOne(query);
                               res.send(result);
                     });
+
+                    //update 
+                    app.put('/item/:id', async (req, res) => {
+                              const id = req.params.id;
+                              const newQuantity = req.body;
+                              const filter = { _id: ObjectId(id) };
+                              const options = { upsert: true };
+
+                              const updateDoc = {
+                                        $set: {
+                                                  quantity: newQuantity.result
+                                        },
+                              };
+                              const result = await itemCollection.updateOne(filter, updateDoc, options)
+                              res.send(result);
+                    });
+
 
           }
           finally {
